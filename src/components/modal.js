@@ -1,12 +1,3 @@
-const popupCardImage = document.querySelector('.popup__image');
-const popupCardCaption = document.querySelector('.popup__caption');
-
-function fillCardImagePopup(target) {
-    popupCardImage['src'] = target['src'];
-    popupCardImage['alt'] = target['alt'];
-    popupCardCaption.textContent = target.closest('.card').querySelector('.card__title').textContent;
-}
-
 function openPopup(target) {
     target.classList.add('popup_is-opened');
     addEscapeListener();
@@ -31,4 +22,4 @@ function escapeListener(evt) {
     }
 }
 
-export {closePopup, openPopup, fillCardImagePopup};
+export {closePopup, openPopup};

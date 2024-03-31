@@ -1,5 +1,5 @@
 import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
-import {closePopup, openPopup, fillCardImagePopup} from "./modal";
+import {closePopup, openPopup} from "./modal";
 
 const cards = document.querySelector('.places__list');
 
@@ -82,6 +82,9 @@ function addFirstChild(parent, newElement) {
 }
 
 //Отображение полноэкранной картинки
+const popupCardImage = document.querySelector('.popup__image');
+const popupCardCaption = document.querySelector('.popup__caption');
+
 document.addEventListener('click', evt => {
     const target = evt.target;
 
@@ -93,3 +96,9 @@ document.addEventListener('click', evt => {
         closePopup(target);
     }
 });
+
+function fillCardImagePopup(target) {
+    popupCardImage['src'] = target['src'];
+    popupCardImage['alt'] = target['alt'];
+    popupCardCaption.textContent = target.closest('.card').querySelector('.card__title').textContent;
+}
