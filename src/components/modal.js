@@ -22,4 +22,12 @@ function escapeListener(evt) {
     }
 }
 
+document.addEventListener('click', evt => {
+    const target = evt.target;
+
+    if (target.classList.contains('popup_is-opened')) {
+        closePopup(target);
+    }
+});
+
 export {closePopup, openPopup};
