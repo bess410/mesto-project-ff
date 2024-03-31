@@ -1,21 +1,17 @@
 import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
-import {closePopup, openPopup} from "./modal";
+import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 
 const cards = document.querySelector('.places__list');
 
 // Отображаем карточки
 initialCards.forEach(item => {
-    const card = createCard(item, deleteCard, likeCard);
+    const card = createCard(item, deleteCard, likeCard, popupCard);
     cards.append(card);
 });
 
-// Закрытие попапа при клике на оверлее
-document.addEventListener('click', evt => {
-    const target = evt.target;
-    if (target.classList.contains('popup__close')) {
-        closePopup(target.closest('.popup'));
-    }
-});
+// Закрытие попапа
+document.addEventListener('click', crossButtonClose);
+document.addEventListener('click', overlayClose);
 
 // Редактирование профиля
 const formEditProfile = document.forms['edit-profile'];
@@ -52,7 +48,6 @@ const inputNewCardName = formAddNewCard.elements['place-name'];
 const inputNewCardUrl = formAddNewCard.elements['link'];
 const buttonAddNewCard = document.querySelector('.profile__add-button');
 const popupAddNewCard = document.querySelector('.popup_type_new-card');
-const popupCard = document.querySelector('.popup_type_image');
 
 buttonAddNewCard.addEventListener('click', () => {
     openPopup(popupAddNewCard);
@@ -67,7 +62,7 @@ function submitAddNewCard(evt) {
         name: inputNewCardName.value,
         link: inputNewCardUrl.value
     }
-    addFirstChild(cards, createCard(card, deleteCard, likeCard));
+    addFirstChild(cards, createCard(card, deleteCard, likeCard, popupCard));
     formAddNewCard.reset();
     closePopup(formAddNewCard.closest('.popup'));
 }
@@ -84,18 +79,14 @@ function addFirstChild(parent, newElement) {
 //Отображение полноэкранной картинки
 const popupCardImage = document.querySelector('.popup__image');
 const popupCardCaption = document.querySelector('.popup__caption');
+const popupCardWindow = document.querySelector('.popup_type_image');
 
-document.addEventListener('click', evt => {
-    const target = evt.target;
+function popupCard(event) {
+    const target = event.target;
 
-    if (target.classList.contains('card__image')) {
-        fillCardImagePopup(target);
-        openPopup(popupCard);
-    }
-    if (target.classList.contains('popup_is-opened')) {
-        closePopup(target);
-    }
-});
+    fillCardImagePopup(target);
+    openPopup(popupCardWindow);
+}
 
 function fillCardImagePopup(target) {
     popupCardImage['src'] = target['src'];

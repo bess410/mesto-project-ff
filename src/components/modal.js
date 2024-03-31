@@ -22,12 +22,18 @@ function escapeListener(evt) {
     }
 }
 
-document.addEventListener('click', evt => {
+function overlayClose(evt) {
     const target = evt.target;
-
     if (target.classList.contains('popup_is-opened')) {
         closePopup(target);
     }
-});
+}
 
-export {closePopup, openPopup};
+function crossButtonClose(evt) {
+    const target = evt.target;
+    if (target.classList.contains('popup__close')) {
+        closePopup(target.closest('.popup'));
+    }
+}
+
+export {closePopup, openPopup, overlayClose, crossButtonClose};
