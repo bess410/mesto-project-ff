@@ -35,7 +35,7 @@ function createCard(card, deleteFunction, likeFunction, popupFunction) {
     cardElement.querySelector('.card__title').textContent = card.name;
     cardElement.querySelector('.card__delete-button').addEventListener('click', (event) => deleteFunction(event));
     cardElement.querySelector('.card__like-button').addEventListener('click', (event) => likeFunction(event));
-    cardElement.querySelector('.card__image').addEventListener('click', (event) => popupFunction(event));
+    img.addEventListener('click', (event) => popupFunction(event));
 
     return cardElement;
 }

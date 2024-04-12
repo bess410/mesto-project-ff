@@ -62,18 +62,9 @@ function submitAddNewCard(evt) {
         name: inputNewCardName.value,
         link: inputNewCardUrl.value
     }
-    addFirstChild(cards, createCard(card, deleteCard, likeCard, popupCard));
+    cards.prepend(createCard(card, deleteCard, likeCard, popupCard));
     formAddNewCard.reset();
     closePopup(formAddNewCard.closest('.popup'));
-}
-
-function addFirstChild(parent, newElement) {
-    const firstChild = parent.firstChild;
-    if (firstChild) {
-        parent.insertBefore(newElement, firstChild);
-    } else {
-        parent.append(newElement);
-    }
 }
 
 //Отображение полноэкранной картинки
