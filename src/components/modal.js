@@ -1,3 +1,5 @@
+import {hideInputError} from "./validation";
+
 function openPopup(target) {
     target.classList.add('popup_is-opened');
     addEscapeListener();
@@ -5,6 +7,9 @@ function openPopup(target) {
 
 function closePopup(target) {
     target.classList.remove('popup_is-opened');
+    const form = target.querySelector('.popup__form');
+    const inputs = form.querySelectorAll('.popup__input');
+    inputs.forEach(input => hideInputError(form, input));
     removeEscapeListener();
 }
 

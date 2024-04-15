@@ -1,6 +1,8 @@
 import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
+import {enableValidation} from "./validation";
 
+enableValidation();
 const cards = document.querySelector('.places__list');
 
 // Отображаем карточки
