@@ -9,7 +9,10 @@ function closePopup(target) {
     target.classList.remove('popup_is-opened');
     const form = target.querySelector('.popup__form');
     const inputs = form.querySelectorAll('.popup__input');
+    const button = form.querySelector('.popup__button');
+
     inputs.forEach(input => hideInputError(form, input));
+    button.classList.remove("button_inactive");
     removeEscapeListener();
 }
 

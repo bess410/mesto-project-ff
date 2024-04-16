@@ -1,15 +1,3 @@
-.button.button_inactive {
-  opacity: 0.2;
-  color: #000;
-  border: 1px solid black;
-  background: #fff;
-  pointer-events: none;
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
 .popup__button {
   width: 100%;
   height: 50px;
@@ -24,6 +12,18 @@
   border: none;
   transition: visibility 0s, background 0.3s;
   margin-top: 28px;
+}
+
+.button_inactive {
+  opacity: 0.2;
+  color: #000;
+  border: 1px solid black;
+  background: #fff;
+  pointer-events: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
 }
 
 .popup__button:hover {
