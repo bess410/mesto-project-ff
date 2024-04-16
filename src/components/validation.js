@@ -15,7 +15,7 @@ const hideInputError = (formElement, inputElement) => {
 
 const checkInputValidity = (formElement, inputElement) => {
     if (inputElement.validity.patternMismatch) {
-        inputElement.setCustomValidity("Вы ввели запрещенные символы. Не надо так.");
+        inputElement.setCustomValidity(inputElement.dataset.errorMessage);
     } else {
         inputElement.setCustomValidity("");
     }
