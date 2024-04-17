@@ -1,17 +1,35 @@
-import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
+import {createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {getUserInfo} from "./api";
+import {getUserInfo, getCards} from "./api";
 
 enableValidation(validationConfig);
 const cards = document.querySelector('.places__list');
 
 // Отображаем карточки
-initialCards.forEach(item => {
-    const card = createCard(item, deleteCard, likeCard, popupCard);
-    cards.append(card);
-});
+getCards()
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(res.status);
+    })
+    .then(res => {
+            renderCards(res);
+        }
+    )
+    .catch(err => console.log(`Ошибка: ${err}`));
+
+function renderCards(cards) {
+    //TODO удалить
+    if (cards.length === 0) {
+        console.log("Hello");
+    }
+    cards.forEach(card => {
+        cards.prepend(createCard(card, deleteCard, likeCard));
+    });
+}
 
 // Закрытие попапа
 document.addEventListener('click', crossButtonClose);
