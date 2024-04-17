@@ -2,24 +2,25 @@ import {createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {getUserInfo, getCards} from "./api";
+import {getMethod} from "./api";
 
 enableValidation(validationConfig);
-const cards = document.querySelector('.places__list');
+
+// Загружаем данные с сервера
+Promise.all([
+    getMethod({
+        url: 'users/me',
+        renderFunction: renderProfile
+    }),
+    getMethod({
+        url: 'cards',
+        renderFunction: renderCards
+    })
+])
+    .catch(error => console.log(error))
 
 // Отображаем карточки
-getCards()
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(res.status);
-    })
-    .then(res => {
-            renderCards(res);
-        }
-    )
-    .catch(err => console.log(`Ошибка: ${err}`));
+const cards = document.querySelector('.places__list');
 
 function renderCards(cards) {
     //TODO удалить
@@ -111,17 +112,6 @@ function fillCardImagePopup(target) {
 
 //Получение данных о пользователе
 const profileImage = document.querySelector('.profile__image');
-
-getUserInfo()
-    .then(res => {
-        if (res.ok) {
-            return res.json();
-        }
-        return Promise.reject(res.status);
-    })
-    .then(res => renderProfile(res))
-    .catch(err => console.log(`Ошибка: ${err}`));
-
 
 function renderProfile(res) {
     profileTitle.textContent = res.name;
