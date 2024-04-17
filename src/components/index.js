@@ -2,6 +2,7 @@ import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
+import {getUserInfo} from "./api";
 
 enableValidation(validationConfig);
 const cards = document.querySelector('.places__list');
@@ -88,4 +89,24 @@ function fillCardImagePopup(target) {
     popupCardImage['src'] = target['src'];
     popupCardImage['alt'] = target['alt'];
     popupCardCaption.textContent = target.closest('.card').querySelector('.card__title').textContent;
+}
+
+//Получение данных о пользователе
+const profileImage = document.querySelector('.profile__image');
+
+getUserInfo()
+    .then(res => {
+        if (res.ok) {
+            return res.json();
+        }
+        return Promise.reject(res.status);
+    })
+    .then(res => renderProfile(res))
+    .catch(err => console.log(`Ошибка: ${err}`));
+
+
+function renderProfile(res) {
+    profileTitle.textContent = res.name;
+    profileDescription.textContent = res.about.replace(/[^а-яА-ЯёЁa-zA-Z \-]+/g, '');
+    profileImage.style.backgroundImage = `url(${res.avatar})`;
 }
