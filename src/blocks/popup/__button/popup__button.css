@@ -14,7 +14,7 @@
   margin-top: 28px;
 }
 
-.button_inactive {
+.popup__button_disabled {
   opacity: 0.2;
   color: #000;
   border: 1px solid black;

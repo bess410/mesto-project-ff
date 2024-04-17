@@ -1,8 +1,9 @@
 import {initialCards, createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
-import {enableValidation} from "./validation";
+import {clearValidation, enableValidation} from "./validation";
+import validationConfig from "./config/validationConfig";
 
-enableValidation();
+enableValidation(validationConfig);
 const cards = document.querySelector('.places__list');
 
 // Отображаем карточки
@@ -27,6 +28,7 @@ const popupEditProfile = document.querySelector('.popup_type_edit');
 buttonEditProfile.addEventListener('click', () => {
     fillEditProfilePopup();
     openPopup(popupEditProfile);
+    clearValidation(formEditProfile, validationConfig);
 });
 
 formEditProfile.addEventListener('submit', submitEditProfile);
@@ -52,6 +54,8 @@ const buttonAddNewCard = document.querySelector('.profile__add-button');
 const popupAddNewCard = document.querySelector('.popup_type_new-card');
 
 buttonAddNewCard.addEventListener('click', () => {
+    formAddNewCard.reset();
+    clearValidation(formAddNewCard, validationConfig);
     openPopup(popupAddNewCard);
 });
 
@@ -65,7 +69,6 @@ function submitAddNewCard(evt) {
         link: inputNewCardUrl.value
     }
     cards.prepend(createCard(card, deleteCard, likeCard, popupCard));
-    formAddNewCard.reset();
     closePopup(formAddNewCard.closest('.popup'));
 }
 
