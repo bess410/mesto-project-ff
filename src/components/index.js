@@ -22,13 +22,9 @@ Promise.all([
 // Отображаем карточки
 const cards = document.querySelector('.places__list');
 
-function renderCards(cards) {
-    //TODO удалить
-    if (cards.length === 0) {
-        console.log("Hello");
-    }
-    cards.forEach(card => {
-        cards.prepend(createCard(card, deleteCard, likeCard));
+function renderCards(res) {
+    res.forEach(card => {
+        cards.prepend(createCard(card, deleteCard, likeCard, popupCard));
     });
 }
 
