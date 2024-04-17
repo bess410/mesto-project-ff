@@ -1,7 +1,11 @@
-import {hideInputError} from "./validation";
+import {hideInputError, toggleButtonState} from "./validation";
 
 function openPopup(target) {
     target.classList.add('popup_is-opened');
+    const inputList = Array.from(target.querySelectorAll('.popup__input'));
+    const buttonElement = target.querySelector('.popup__button');
+
+    toggleButtonState(inputList, buttonElement);
     addEscapeListener();
 }
 
@@ -9,10 +13,9 @@ function closePopup(target) {
     target.classList.remove('popup_is-opened');
     const form = target.querySelector('.popup__form');
     const inputs = form.querySelectorAll('.popup__input');
-    const button = form.querySelector('.popup__button');
 
     inputs.forEach(input => hideInputError(form, input));
-    button.classList.remove("button_inactive");
+    form.reset();
     removeEscapeListener();
 }
 

@@ -54,10 +54,12 @@
       <button type="button" class="popup__close"></button>
       <h3 class="popup__title">Новое место</h3>
       <form class="popup__form" name="new-place">
-        <input type="text" name="place-name" class="popup__input popup__input_type_card-name" placeholder="Название" required>
-        <span class="form__input-error form__input-error_active">Вы пропустили это поле.</span>
-        <input type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
-        <span class="form__input-error form__input-error_active">Введите адрес сайта.</span>
+        <input id="new-place-name" type="text" name="place-name" class="popup__input popup__input_type_card-name"
+               placeholder="Название" minlength="2" maxlength="30" pattern="^[а-яА-ЯёЁa-zA-Z \-]+$"
+               data-error-message="Вы ввели запрещенные символы. Не надо так." required>
+        <span class="new-place-name-error form__input-error">Вы пропустили это поле.</span>
+        <input id="new-place-url" type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+        <span class="new-place-url-error form__input-error">Введите адрес сайта.</span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>

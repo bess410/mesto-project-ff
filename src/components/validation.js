@@ -30,6 +30,7 @@ const checkInputValidity = (formElement, inputElement) => {
 const setEventListeners = (formElement) => {
     const inputList = Array.from(formElement.querySelectorAll('.popup__input'));
     const buttonElement = formElement.querySelector('.popup__button');
+
     inputList.forEach((inputElement) => {
         inputElement.addEventListener('input', function () {
             checkInputValidity(formElement, inputElement);
@@ -59,4 +60,4 @@ function toggleButtonState(inputList, buttonElement) {
     }
 }
 
-export {enableValidation, hideInputError};
+export {enableValidation, hideInputError, toggleButtonState};
