@@ -1,8 +1,8 @@
-import {createCard, deleteCard, likeCard} from "./cards.js";
+import {createCard, deleteCard, likeCard} from "./card.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {getMethod, patchMethod} from "./api";
+import {getMethod, postMethod} from "./api";
 
 enableValidation(validationConfig);
 
@@ -57,8 +57,9 @@ function fillEditProfilePopup() {
 function submitEditProfile(evt) {
     evt.preventDefault();
 
-    patchMethod({
+    postMethod({
         url: 'users/me',
+        method: 'PATCH',
         body: {
             name: inputProfileName.value,
             about: inputProfileDescription.value
@@ -86,11 +87,18 @@ formAddNewCard.addEventListener('submit', submitAddNewCard);
 function submitAddNewCard(evt) {
     evt.preventDefault();
 
-    const card = {
-        name: inputNewCardName.value,
-        link: inputNewCardUrl.value
-    }
-    cards.prepend(createCard(card, deleteCard, likeCard, popupCard));
+    postMethod({
+        url: 'cards',
+        method: 'POST',
+        body: {
+            name: inputNewCardName.value,
+            link: inputNewCardUrl.value
+        },
+        renderFunction: () => {}
+    });
+
+
+
     closePopup(formAddNewCard.closest('.popup'));
 }
 

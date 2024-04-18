@@ -21,9 +21,9 @@ function getMethod(apiRequest) {
         .catch(err => console.log(`Ошибка: ${err}`));
 }
 
-function patchMethod(apiRequest) {
+function postMethod(apiRequest) {
     return fetch(`${baseUrl}${cohort}/${apiRequest.url}`, {
-        method: 'PATCH',
+        method: `${apiRequest.method}`,
         headers: {
             authorization: token,
             'Content-Type': 'application/json'
@@ -43,4 +43,4 @@ function patchMethod(apiRequest) {
         .catch(err => console.log(`Ошибка: ${err}`));
 }
 
-export {getMethod, patchMethod};
+export {getMethod, postMethod};
