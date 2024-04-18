@@ -2,7 +2,7 @@
     width: 22px;
     height: 19px;
   background: transparent url('../../../images/like-inactive.svg') no-repeat;
-  background-size: 100% 100%;
+  background-size: contain;
 
   border: none;
   cursor: pointer;
