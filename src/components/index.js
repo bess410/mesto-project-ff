@@ -2,7 +2,7 @@ import {createCard, deleteCard, likeCard} from "./cards.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {getMethod} from "./api";
+import {getMethod, patchMethod} from "./api";
 
 enableValidation(validationConfig);
 
@@ -57,8 +57,14 @@ function fillEditProfilePopup() {
 function submitEditProfile(evt) {
     evt.preventDefault();
 
-    profileTitle.textContent = inputProfileName.value;
-    profileDescription.textContent = inputProfileDescription.value;
+    patchMethod({
+        url: 'users/me',
+        body: {
+            name: inputProfileName.value,
+            about: inputProfileDescription.value
+        },
+        renderFunction: renderProfile
+    });
     closePopup(formEditProfile.closest('.popup'));
 }
 
