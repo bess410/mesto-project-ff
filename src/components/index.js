@@ -97,8 +97,6 @@ function submitAddNewCard(evt) {
         renderFunction: () => {}
     });
 
-
-
     closePopup(formAddNewCard.closest('.popup'));
 }
 
