@@ -87,15 +87,18 @@ formAddNewCard.addEventListener('submit', submitAddNewCard);
 function submitAddNewCard(evt) {
     evt.preventDefault();
 
+    const card = {
+        name: inputNewCardName.value,
+        link: inputNewCardUrl.value
+    }
     postMethod({
         url: 'cards',
         method: 'POST',
-        body: {
-            name: inputNewCardName.value,
-            link: inputNewCardUrl.value
-        },
+        body: card,
         renderFunction: () => {}
     });
+
+    cards.append(createCard(card, deleteCard, likeCard, popupCard));
 
     closePopup(formAddNewCard.closest('.popup'));
 }
