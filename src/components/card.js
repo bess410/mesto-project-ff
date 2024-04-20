@@ -3,8 +3,10 @@ const cardTemplate = document.querySelector('#card-template').content;
 function createCard(card, deleteFunction, likeFunction, popupFunction) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     const img = cardElement.querySelector('.card__image');
+    let likes = cardElement.querySelector('.card__like-counter');
     img.src = card.link;
     img.alt = card.name;
+    likes.textContent = card.likes.length === 0 ? '' : card.likes.length;
     cardElement.querySelector('.card__title').textContent = card.name;
     cardElement.querySelector('.card__delete-button').addEventListener('click', (event) => deleteFunction(event));
     cardElement.querySelector('.card__like-button').addEventListener('click', (event) => likeFunction(event));
