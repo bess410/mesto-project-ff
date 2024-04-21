@@ -1,7 +1,10 @@
+import {getMethod} from "./api";
+
 const cardTemplate = document.querySelector('#card-template').content;
 
 function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
+    cardElement.id = card._id;
     cardElement.querySelector('.card__title').textContent = card.name;
     cardElement.querySelector('.card__like-button').addEventListener('click', (event) => likeFunction(event));
 
@@ -24,7 +27,12 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
 }
 
 const deleteCard = function (event) {
-    event.target.closest('.card').remove();
+    let card = event.target.closest('.card');
+    getMethod({
+        method: 'DELETE',
+        url: `cards/${card.id}`,
+        renderFunction: () => card.remove()
+    });
 }
 
 const likeCard = function (event) {

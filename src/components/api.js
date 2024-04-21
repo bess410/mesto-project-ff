@@ -1,9 +1,10 @@
-const baseUrl = 'https://nomoreparties.co/v1/';
-const cohort = 'wff-cohort-12/';
+const baseUrl = 'https://nomoreparties.co/v1';
+const cohort = 'wff-cohort-12';
 const token = '276ad100-5acb-4462-bd4c-2c97ced4dc2a';
 
 function getMethod(apiRequest) {
-    return fetch(`${baseUrl}${cohort}/${apiRequest.url}`, {
+    return fetch(`${baseUrl}/${cohort}/${apiRequest.url}`, {
+        method: `${apiRequest.method}`,
         headers: {
             authorization: token
         }
@@ -22,7 +23,7 @@ function getMethod(apiRequest) {
 }
 
 function postMethod(apiRequest) {
-    return fetch(`${baseUrl}${cohort}/${apiRequest.url}`, {
+    return fetch(`${baseUrl}/${cohort}/${apiRequest.url}`, {
         method: `${apiRequest.method}`,
         headers: {
             authorization: token,

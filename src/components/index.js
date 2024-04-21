@@ -9,10 +9,12 @@ enableValidation(validationConfig);
 // Загружаем данные с сервера
 Promise.all([
     getMethod({
+        method: 'GET',
         url: 'users/me',
         renderFunction: renderProfile
     }),
     getMethod({
+        method: 'GET',
         url: 'cards',
         renderFunction: renderCards
     })
