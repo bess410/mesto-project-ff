@@ -2,18 +2,18 @@ import {createCard, deleteCard, likeCard} from "./card.js";
 import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {getMethod, postMethod} from "./api";
+import {apiMethod} from "./api";
 
 enableValidation(validationConfig);
 
 // Загружаем данные с сервера
 Promise.all([
-    getMethod({
+    apiMethod({
         method: 'GET',
         url: 'users/me',
         renderFunction: renderProfile
     }),
-    getMethod({
+    apiMethod({
         method: 'GET',
         url: 'cards',
         renderFunction: renderCards
@@ -60,7 +60,7 @@ function fillEditProfilePopup() {
 function submitEditProfile(evt) {
     evt.preventDefault();
 
-    postMethod({
+    apiMethod({
         url: 'users/me',
         method: 'PATCH',
         body: {
@@ -94,7 +94,7 @@ function submitAddNewCard(evt) {
         name: inputNewCardName.value,
         link: inputNewCardUrl.value
     }
-    postMethod({
+    apiMethod({
         url: 'cards',
         method: 'POST',
         body: card,

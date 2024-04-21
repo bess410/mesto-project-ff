@@ -1,4 +1,4 @@
-import {getMethod} from "./api";
+import {apiMethod} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -28,7 +28,7 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
 
 const deleteCard = function (event) {
     let card = event.target.closest('.card');
-    getMethod({
+    apiMethod({
         method: 'DELETE',
         url: `cards/${card.id}`,
         renderFunction: () => card.remove()
