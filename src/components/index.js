@@ -24,7 +24,7 @@ const cards = document.querySelector('.places__list');
 
 function renderCards(res) {
     res.forEach(card => {
-        cards.prepend(createCard(card, deleteCard, likeCard, popupCard));
+        cards.prepend(createCard(card, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
     });
 }
 
@@ -36,8 +36,9 @@ document.addEventListener('click', overlayClose);
 const formEditProfile = document.forms['edit-profile'];
 const inputProfileName = formEditProfile.elements['name'];
 const inputProfileDescription = formEditProfile.elements['description'];
-const profileTitle = document.querySelector('.profile__title');
-const profileDescription = document.querySelector('.profile__description');
+const profileInfo = document.querySelector('.profile__info');
+const profileTitle = profileInfo.querySelector('.profile__title');
+const profileDescription = profileInfo.querySelector('.profile__description');
 const buttonEditProfile = document.querySelector('.profile__edit-button');
 const popupEditProfile = document.querySelector('.popup_type_edit');
 
@@ -95,10 +96,10 @@ function submitAddNewCard(evt) {
         url: 'cards',
         method: 'POST',
         body: card,
-        renderFunction: () => {}
+        renderFunction: (res) => {
+            cards.append(createCard(res, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
+        }
     });
-
-    cards.append(createCard(card, deleteCard, likeCard, popupCard));
 
     closePopup(formAddNewCard.closest('.popup'));
 }
@@ -125,6 +126,7 @@ function fillCardImagePopup(target) {
 const profileImage = document.querySelector('.profile__image');
 
 function renderProfile(res) {
+    profileInfo.dataset.userId = res._id;
     profileTitle.textContent = res.name;
     profileDescription.textContent = res.about.replace(/[^а-яА-ЯёЁa-zA-Z \-]+/g, '');
     profileImage.style.backgroundImage = `url(${res.avatar})`;
