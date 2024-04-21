@@ -27,7 +27,7 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
 }
 
 const deleteCard = function (event) {
-    let card = event.target.closest('.card');
+    const card = event.target.closest('.card');
     apiMethod({
         method: 'DELETE',
         url: `cards/${card.id}`,
@@ -36,7 +36,29 @@ const deleteCard = function (event) {
 }
 
 const likeCard = function (event) {
-    event.target.classList.toggle('card__like-button_is-active');
+    const likeButton = event.target;
+    const card = likeButton.closest('.card');
+    const likes = card.querySelector('.card__like-counter');
+
+    if(likeButton.classList.contains('card__like-button_is-active')) {
+        apiMethod({
+            method: 'DELETE',
+            url: `cards/likes/${card.id}`,
+            renderFunction: (res) => {
+                likeButton.classList.toggle('card__like-button_is-active');
+                likes.textContent = res.likes.length === 0 ? '' : res.likes.length;
+            }
+        });
+    } else {
+        apiMethod({
+            method: 'PUT',
+            url: `cards/likes/${card.id}`,
+            renderFunction: (res) => {
+                likeButton.classList.toggle('card__like-button_is-active');
+                likes.textContent = res.likes.length === 0 ? '' : res.likes.length;
+            }
+        });
+    }
 }
 
 export {createCard, deleteCard, likeCard};
