@@ -6,15 +6,19 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     cardElement.id = card._id;
     cardElement.querySelector('.card__title').textContent = card.name;
-    cardElement.querySelector('.card__like-button').addEventListener('click', (event) => likeFunction(event));
 
     const img = cardElement.querySelector('.card__image');
     img.src = card.link;
     img.alt = card.name;
     img.addEventListener('click', (event) => popupFunction(event));
 
-    const likes = cardElement.querySelector('.card__like-counter');
-    likes.textContent = card.likes.length === 0 ? '' : card.likes.length;
+    const likeButton = cardElement.querySelector('.card__like-button');
+    likeButton.addEventListener('click', (event) => likeFunction(event));
+    const likesCounter = cardElement.querySelector('.card__like-counter');
+    likesCounter.textContent = card.likes.length === 0 ? '' : card.likes.length;
+    if (card.likes.some(like => like._id === ownerId)) {
+        likeButton.classList.add('card__like-button_is-active');
+    }
 
     const buttonDelete = cardElement.querySelector('.card__delete-button');
     if (card.owner._id !== ownerId) {
