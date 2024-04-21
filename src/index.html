@@ -57,9 +57,9 @@
         <input id="new-place-name" type="text" name="place-name" class="popup__input popup__input_type_card-name"
                placeholder="Название" minlength="2" maxlength="30" pattern="^[а-яА-ЯёЁa-zA-Z \-]+$"
                data-error-message="Разрешены только латинские, кириллические буквы, знаки дефиса и пробелы" required>
-        <span class="new-place-name-error form__input-error">Вы пропустили это поле.</span>
+        <span class="new-place-name-error form__input-error"></span>
         <input id="new-place-url" type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
-        <span class="new-place-url-error form__input-error">Введите адрес сайта.</span>
+        <span class="new-place-url-error form__input-error"></span>
         <button type="submit" class="button popup__button">Сохранить</button>
       </form>
     </div>
@@ -69,6 +69,17 @@
       <button type="button" class="popup__close"></button>
       <img src="" alt="" class="popup__image">
       <p class="popup__caption"></p>
+    </div>
+  </div>
+  <div class="popup popup_type_update_avatar popup_is-animated">
+    <div class="popup__content">
+      <button type="button" class="popup__close"></button>
+      <h3 class="popup__title">Обновить аватар</h3>
+      <form class="popup__form" name="update-avatar">
+        <input id="avatar-url" type="url" name="link" class="popup__input popup__input_type_url" placeholder="Ссылка на картинку" required>
+        <span class="avatar-url-error form__input-error"></span>
+        <button type="submit" class="button popup__button">Сохранить</button>
+      </form>
     </div>
   </div>
 </div>

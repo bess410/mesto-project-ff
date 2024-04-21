@@ -126,6 +126,34 @@ function fillCardImagePopup(target) {
 
 //Получение данных о пользователе
 const profileImage = document.querySelector('.profile__image');
+const popupUpdateAvatar = document.querySelector('.popup_type_update_avatar');
+const formUpdateAvatar = document.forms['update-avatar'];
+const inputUpdateAvatar =formUpdateAvatar.elements['link'];
+
+profileImage.addEventListener('click', () => {
+    fillUpdateAvatarPopup();
+    openPopup(popupUpdateAvatar);
+    clearValidation(formUpdateAvatar, validationConfig);
+});
+
+function fillUpdateAvatarPopup() {
+    inputUpdateAvatar.value = profileImage.style.backgroundImage.slice(5, -2);
+}
+
+formUpdateAvatar.addEventListener('submit', submitUpdateAvatar);
+
+function submitUpdateAvatar(evt) {
+    evt.preventDefault();
+    apiMethod({
+        url: 'users/me/avatar',
+        method: 'PATCH',
+        body: {
+            avatar: inputUpdateAvatar.value
+        },
+        renderFunction: renderProfile
+    });
+    closePopup(inputUpdateAvatar.closest('.popup'));
+}
 
 function renderProfile(res) {
     profileInfo.dataset.userId = res._id;
