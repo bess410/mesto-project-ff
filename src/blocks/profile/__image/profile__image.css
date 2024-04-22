@@ -26,6 +26,10 @@
   background-size: 26px 26px, 100% 100%;
 }
 
+.profile__image.clicked:hover {
+  opacity: 0;
+}
+
 @media screen and (max-width: 740px) {
   .profile__image {
     margin: 0 10px 0 0;

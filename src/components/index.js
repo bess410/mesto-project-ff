@@ -131,10 +131,13 @@ const formUpdateAvatar = document.forms['update-avatar'];
 const inputUpdateAvatar =formUpdateAvatar.elements['link'];
 
 profileImage.addEventListener('click', () => {
+    profileImage.classList.add('clicked');
     fillUpdateAvatarPopup();
     openPopup(popupUpdateAvatar);
     clearValidation(formUpdateAvatar, validationConfig);
 });
+
+profileImage.addEventListener('mouseout', () => profileImage.classList.remove('clicked'));
 
 function fillUpdateAvatarPopup() {
     inputUpdateAvatar.value = profileImage.style.backgroundImage.slice(5, -2);
