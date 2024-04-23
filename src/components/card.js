@@ -1,4 +1,5 @@
 import {apiMethod} from "./api";
+import {closePopup, openPopup} from "./modal";
 
 const cardTemplate = document.querySelector('#card-template').content;
 
@@ -24,19 +25,29 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
     if (card.owner._id !== ownerId) {
         buttonDelete.remove();
     } else {
-        buttonDelete.addEventListener('click', (event) => deleteFunction(event));
+        buttonDelete.addEventListener('click', (event) => confirmCardDeletion(event));
     }
 
     return cardElement;
 }
 
-const deleteCard = function (event) {
+//Открытие окна подтверждения удаления карточки
+const confirmCardDeletionPopup = document.querySelector('.popup_type_confirm_card_deletion');
+
+function confirmCardDeletion(event) {
     const card = event.target.closest('.card');
+    openPopup(confirmCardDeletionPopup);
+    const button = confirmCardDeletionPopup.querySelector('.popup__button');
+    button.addEventListener('click', () => deleteCard(card));
+}
+
+const deleteCard = function (card) {
     apiMethod({
         method: 'DELETE',
         url: `cards/${card.id}`,
         renderFunction: () => card.remove()
-    });
+    })
+        .finally(() => closePopup(confirmCardDeletionPopup));
 }
 
 const likeCard = function (event) {

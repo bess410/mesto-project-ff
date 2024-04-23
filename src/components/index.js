@@ -5,6 +5,9 @@ import validationConfig from "./config/validationConfig";
 import {apiMethod} from "./api";
 
 enableValidation(validationConfig);
+// Закрытие попапа
+document.addEventListener('click', crossButtonClose);
+document.addEventListener('click', overlayClose);
 
 // Загружаем данные с сервера
 Promise.all([
@@ -29,10 +32,6 @@ function renderCards(res) {
         cards.prepend(createCard(card, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
     });
 }
-
-// Закрытие попапа
-document.addEventListener('click', crossButtonClose);
-document.addEventListener('click', overlayClose);
 
 // Редактирование профиля
 const formEditProfile = document.forms['edit-profile'];
