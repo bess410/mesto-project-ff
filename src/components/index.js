@@ -59,7 +59,8 @@ function fillEditProfilePopup() {
 
 function submitEditProfile(evt) {
     evt.preventDefault();
-
+    const button = evt.target.querySelector('.popup__button');
+    button.textContent = 'Сохранение...';
     apiMethod({
         url: 'users/me',
         method: 'PATCH',
@@ -68,8 +69,11 @@ function submitEditProfile(evt) {
             about: inputProfileDescription.value
         },
         renderFunction: renderProfile
-    });
-    closePopup(formEditProfile.closest('.popup'));
+    })
+        .finally(() => {
+            closePopup(formEditProfile.closest('.popup'));
+            button.textContent = 'Сохранить';
+        });
 }
 
 // Добавление новой карточки
@@ -89,7 +93,8 @@ formAddNewCard.addEventListener('submit', submitAddNewCard);
 
 function submitAddNewCard(evt) {
     evt.preventDefault();
-
+    const button = evt.target.querySelector('.popup__button');
+    button.textContent = 'Сохранение...';
     const card = {
         name: inputNewCardName.value,
         link: inputNewCardUrl.value
@@ -101,9 +106,11 @@ function submitAddNewCard(evt) {
         renderFunction: (res) => {
             cards.append(createCard(res, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
         }
-    });
-
-    closePopup(formAddNewCard.closest('.popup'));
+    })
+        .finally(() => {
+            closePopup(formAddNewCard.closest('.popup'));
+            button.textContent = 'Сохранить';
+        });
 }
 
 //Отображение полноэкранной картинки
@@ -147,6 +154,8 @@ formUpdateAvatar.addEventListener('submit', submitUpdateAvatar);
 
 function submitUpdateAvatar(evt) {
     evt.preventDefault();
+    const button = evt.target.querySelector('.popup__button');
+    button.textContent = 'Сохранение...';
     apiMethod({
         url: 'users/me/avatar',
         method: 'PATCH',
@@ -154,8 +163,11 @@ function submitUpdateAvatar(evt) {
             avatar: inputUpdateAvatar.value
         },
         renderFunction: renderProfile
-    });
-    closePopup(inputUpdateAvatar.closest('.popup'));
+    })
+        .finally(() => {
+            closePopup(inputUpdateAvatar.closest('.popup'));
+            button.textContent = 'Сохранить';
+        });
 }
 
 function renderProfile(res) {
