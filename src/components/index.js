@@ -157,7 +157,8 @@ const confirmDeletion = (cardElement, cardId) => {
     openPopup(confirmCardDeletionPopup);
     cardIdToDelete = cardId;
     cardElementToDelete = cardElement;
-    button.addEventListener('click', (event) => {
+
+    function deleteCardListener(event) {
         event.preventDefault();
         deleteCard(cardIdToDelete)
             .then(() => {
@@ -165,7 +166,10 @@ const confirmDeletion = (cardElement, cardId) => {
                 closePopup(confirmCardDeletionPopup)
             })
             .catch(error => console.log(error));
-    });
+        button.removeEventListener('click', deleteCardListener);
+    }
+
+    button.addEventListener('click', deleteCardListener);
 }
 
 // Загружаем данные с сервера
