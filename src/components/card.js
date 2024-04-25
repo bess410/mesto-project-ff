@@ -1,8 +1,8 @@
-import {deleteLike, addLike, apiDeleteCard} from "./api";
+import {deleteLike, addLike} from "./api";
 
 const cardTemplate = document.querySelector('#card-template').content;
 
-function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) {
+function createCard(card, ownerId, likeFunction, popupFunction, confirmDeleteFunction) {
     const cardElement = cardTemplate.querySelector('.card').cloneNode(true);
     cardElement.querySelector('.card__title').textContent = card.name;
     const cardId = card._id;
@@ -24,18 +24,10 @@ function createCard(card, ownerId, deleteFunction, likeFunction, popupFunction) 
     if (card.owner._id !== ownerId) {
         buttonDelete.remove();
     } else {
-        buttonDelete.addEventListener('click', () => deleteFunction(cardElement, cardId));
+        buttonDelete.addEventListener('click', () => confirmDeleteFunction(cardElement, cardId));
     }
 
     return cardElement;
-}
-
-const deleteCard = (cardElement, cardId) => {
-    return apiDeleteCard(cardId)
-        .then(() => {
-            cardElement.remove();
-        })
-        .catch(error => console.log(error));
 }
 
 const likeCard = (event, cardId) => {
@@ -60,4 +52,4 @@ const likeCard = (event, cardId) => {
     }
 }
 
-export {createCard, deleteCard, likeCard};
+export {createCard, likeCard};

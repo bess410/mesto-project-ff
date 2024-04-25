@@ -1,8 +1,8 @@
-import {createCard, deleteCard, likeCard} from "./card.js";
+import {createCard, likeCard} from "./card.js";
 import {closePopup, openPopup, overlayClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {uploadCard, getInitialCards, getUserProfile, updateProfile, updateAvatar} from "./api";
+import {uploadCard, getInitialCards, getUserProfile, updateProfile, updateAvatar, deleteCard} from "./api";
 
 enableValidation(validationConfig);
 // Закрытие попапа
@@ -93,7 +93,7 @@ const cards = document.querySelector('.places__list');
 
 function renderCards(res, ownerId) {
     res.forEach(card => {
-        cards.append(createCard(card, ownerId, deleteCard, likeCard, popupCard));
+        cards.append(createCard(card, ownerId, likeCard, popupCard, confirmDeletion));
     });
 }
 
@@ -121,7 +121,7 @@ function submitAddNewCard(evt) {
     }
     uploadCard(card)
         .then(data => {
-            cards.prepend(createCard(data, data.owner._id, deleteCard, likeCard, popupCard));
+            cards.prepend(createCard(data, data.owner._id, likeCard, popupCard, confirmDeletion));
             closePopup(popupAddNewCard);
         })
         .catch(error => console.log(error))
@@ -149,6 +149,24 @@ function fillCardImagePopup(card) {
 //Удаление карточки
 const confirmCardDeletionPopup = document.querySelector('.popup_type_confirm_card_deletion');
 const button = confirmCardDeletionPopup.querySelector('.popup__button');
+
+let cardIdToDelete = 0;
+let cardElementToDelete;
+
+const confirmDeletion = (cardElement, cardId) => {
+    openPopup(confirmCardDeletionPopup);
+    cardIdToDelete = cardId;
+    cardElementToDelete = cardElement;
+    button.addEventListener('click', (event) => {
+        event.preventDefault();
+        deleteCard(cardIdToDelete)
+            .then(() => {
+                cardElementToDelete.remove();
+                closePopup(confirmCardDeletionPopup)
+            })
+            .catch(error => console.log(error));
+    });
+}
 
 // Загружаем данные с сервера
 Promise.all([getUserProfile(), getInitialCards()])

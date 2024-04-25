@@ -28,6 +28,6 @@ const uploadCard = (card) =>
     apiMethod({url: 'cards', method: 'POST', body: card});
 const deleteLike = (id) => apiMethod({url: `cards/likes/${id}`, method: 'DELETE'});
 const addLike = (id) => apiMethod({url: `cards/likes/${id}`, method: 'PUT'});
-const apiDeleteCard = (id) => apiMethod({url: `cards/${id}`, method: 'DELETE'});
+const deleteCard = (id) => apiMethod({url: `cards/${id}`, method: 'DELETE'});
 
-export {apiMethod, getInitialCards, getUserProfile, updateProfile, updateAvatar, uploadCard, deleteLike, addLike, apiDeleteCard}
+export {apiMethod, getInitialCards, getUserProfile, updateProfile, updateAvatar, uploadCard, deleteLike, addLike, deleteCard}
