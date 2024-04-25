@@ -1,39 +1,51 @@
 import {createCard, deleteCard, likeCard} from "./card.js";
-import {closePopup, openPopup, overlayClose, crossButtonClose} from "./modal";
+import {closePopup, openPopup, overlayClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {apiMethod} from "./api";
+import {uploadCard, getInitialCards, getUserProfile, updateProfile, updateAvatar} from "./api";
 
 enableValidation(validationConfig);
 // Закрытие попапа
-document.addEventListener('click', crossButtonClose);
-document.addEventListener('click', overlayClose);
+const crossButtons = document.querySelectorAll('.popup__close');
+crossButtons.forEach(button => button.addEventListener('click',
+    (evt) => closePopup(evt.target.closest('.popup'))));
 
-// Загружаем данные с сервера
-Promise.all([
-    apiMethod({
-        method: 'GET',
-        url: 'users/me',
-        renderFunction: renderProfile
-    }),
-    apiMethod({
-        method: 'GET',
-        url: 'cards',
-        renderFunction: renderCards
-    })
-])
-    .catch(error => console.log(error))
+const popups = document.querySelectorAll('.popup');
+popups.forEach(popup => popup.addEventListener('click',
+    (evt) => overlayClose(evt)));
 
-// Отображаем карточки
-const cards = document.querySelector('.places__list');
+//Изменение аватара
+const profileImage = document.querySelector('.profile__image');
+const popupUpdateAvatar = document.querySelector('.popup_type_update_avatar');
+const formUpdateAvatar = document.forms['update-avatar'];
+const inputUpdateAvatar = formUpdateAvatar.elements['link'];
 
-function renderCards(res) {
-    res.forEach(card => {
-        cards.prepend(createCard(card, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
-    });
+profileImage.addEventListener('click', () => {
+    profileImage.classList.add('clicked');
+    inputUpdateAvatar.value = '';
+    openPopup(popupUpdateAvatar);
+    clearValidation(formUpdateAvatar, validationConfig);
+});
+
+profileImage.addEventListener('mouseout', () => profileImage.classList.remove('clicked'));
+
+formUpdateAvatar.addEventListener('submit', (evt) => submitUpdateAvatar(evt, inputUpdateAvatar.value));
+
+function submitUpdateAvatar(evt, avatar) {
+    evt.preventDefault();
+    evt.submitter.textContent = 'Сохранение...';
+    updateAvatar(avatar)
+        .then((data) => {
+            profileImage.style.backgroundImage = `url(${data.avatar})`;
+            closePopup(popupUpdateAvatar);
+        })
+        .catch(error => console.log(error))
+        .finally(() => {
+            evt.submitter.textContent = 'Сохранить';
+        });
 }
 
-// Редактирование профиля
+//Редактирование профиля
 const formEditProfile = document.forms['edit-profile'];
 const inputProfileName = formEditProfile.elements['name'];
 const inputProfileDescription = formEditProfile.elements['description'];
@@ -49,30 +61,40 @@ buttonEditProfile.addEventListener('click', () => {
     clearValidation(formEditProfile, validationConfig);
 });
 
-formEditProfile.addEventListener('submit', submitEditProfile);
-
 function fillEditProfilePopup() {
     inputProfileName.value = profileTitle.textContent;
     inputProfileDescription.value = profileDescription.textContent;
 }
 
-function submitEditProfile(evt) {
+formEditProfile.addEventListener('submit', (evt) => submitEditProfile(evt, inputProfileName.value, inputProfileDescription.value));
+
+function submitEditProfile(evt, name, description) {
     evt.preventDefault();
-    const button = evt.target.querySelector('.popup__button');
-    button.textContent = 'Сохранение...';
-    apiMethod({
-        url: 'users/me',
-        method: 'PATCH',
-        body: {
-            name: inputProfileName.value,
-            about: inputProfileDescription.value
-        },
-        renderFunction: renderProfile
-    })
+    evt.submitter.textContent = 'Сохранение...';
+    updateProfile(name, description)
+        .then((data) => {
+            renderProfile(data);
+            closePopup(popupEditProfile);
+        })
+        .catch(error => console.log(error))
         .finally(() => {
-            closePopup(formEditProfile.closest('.popup'));
-            button.textContent = 'Сохранить';
+            evt.submitter.textContent = 'Сохранить';
         });
+}
+
+function renderProfile(res) {
+    profileTitle.textContent = res.name;
+    profileDescription.textContent = res.about.replace(/[^а-яА-ЯёЁa-zA-Z \-]+/g, '');
+    profileImage.style.backgroundImage = `url(${res.avatar})`;
+}
+
+// Отображаем карточки
+const cards = document.querySelector('.places__list');
+
+function renderCards(res, ownerId) {
+    res.forEach(card => {
+        cards.append(createCard(card, ownerId, deleteCard, likeCard, popupCard));
+    });
 }
 
 // Добавление новой карточки
@@ -88,27 +110,23 @@ buttonAddNewCard.addEventListener('click', () => {
     openPopup(popupAddNewCard);
 });
 
-formAddNewCard.addEventListener('submit', submitAddNewCard);
+formAddNewCard.addEventListener('submit', (event) => submitAddNewCard(event));
 
 function submitAddNewCard(evt) {
     evt.preventDefault();
-    const button = evt.target.querySelector('.popup__button');
-    button.textContent = 'Сохранение...';
+    evt.submitter.textContent = 'Сохранение...';
     const card = {
         name: inputNewCardName.value,
         link: inputNewCardUrl.value
     }
-    apiMethod({
-        url: 'cards',
-        method: 'POST',
-        body: card,
-        renderFunction: (res) => {
-            cards.append(createCard(res, profileInfo.dataset.userId, deleteCard, likeCard, popupCard));
-        }
-    })
+    uploadCard(card)
+        .then(data => {
+            cards.prepend(createCard(data, data.owner._id, deleteCard, likeCard, popupCard));
+            closePopup(popupAddNewCard);
+        })
+        .catch(error => console.log(error))
         .finally(() => {
-            closePopup(formAddNewCard.closest('.popup'));
-            button.textContent = 'Сохранить';
+            evt.submitter.textContent = 'Создать';
         });
 }
 
@@ -117,61 +135,25 @@ const popupCardImage = document.querySelector('.popup__image');
 const popupCardCaption = document.querySelector('.popup__caption');
 const popupCardWindow = document.querySelector('.popup_type_image');
 
-function popupCard(event) {
-    const target = event.target;
-
-    fillCardImagePopup(target);
+function popupCard(card) {
+    fillCardImagePopup(card);
     openPopup(popupCardWindow);
 }
 
-function fillCardImagePopup(target) {
-    popupCardImage['src'] = target['src'];
-    popupCardImage['alt'] = target['alt'];
-    popupCardCaption.textContent = target.closest('.card').querySelector('.card__title').textContent;
+function fillCardImagePopup(card) {
+    popupCardImage.src = card.link;
+    popupCardImage.alt = card.name;
+    popupCardCaption.textContent = card.name;
 }
 
-//Получение данных о пользователе
-const profileImage = document.querySelector('.profile__image');
-const popupUpdateAvatar = document.querySelector('.popup_type_update_avatar');
-const formUpdateAvatar = document.forms['update-avatar'];
-const inputUpdateAvatar =formUpdateAvatar.elements['link'];
+//Удаление карточки
+const confirmCardDeletionPopup = document.querySelector('.popup_type_confirm_card_deletion');
+const button = confirmCardDeletionPopup.querySelector('.popup__button');
 
-profileImage.addEventListener('click', () => {
-    profileImage.classList.add('clicked');
-    fillUpdateAvatarPopup();
-    openPopup(popupUpdateAvatar);
-    clearValidation(formUpdateAvatar, validationConfig);
-});
-
-profileImage.addEventListener('mouseout', () => profileImage.classList.remove('clicked'));
-
-function fillUpdateAvatarPopup() {
-    inputUpdateAvatar.value = profileImage.style.backgroundImage.slice(5, -2);
-}
-
-formUpdateAvatar.addEventListener('submit', submitUpdateAvatar);
-
-function submitUpdateAvatar(evt) {
-    evt.preventDefault();
-    const button = evt.target.querySelector('.popup__button');
-    button.textContent = 'Сохранение...';
-    apiMethod({
-        url: 'users/me/avatar',
-        method: 'PATCH',
-        body: {
-            avatar: inputUpdateAvatar.value
-        },
-        renderFunction: renderProfile
+// Загружаем данные с сервера
+Promise.all([getUserProfile(), getInitialCards()])
+    .then(data => {
+        renderProfile(data[0]);
+        renderCards(data[1], data[0]._id);
     })
-        .finally(() => {
-            closePopup(inputUpdateAvatar.closest('.popup'));
-            button.textContent = 'Сохранить';
-        });
-}
-
-function renderProfile(res) {
-    profileInfo.dataset.userId = res._id;
-    profileTitle.textContent = res.name;
-    profileDescription.textContent = res.about.replace(/[^а-яА-ЯёЁa-zA-Z \-]+/g, '');
-    profileImage.style.backgroundImage = `url(${res.avatar})`;
-}
+    .catch(error => console.log(error));

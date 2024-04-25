@@ -4,7 +4,7 @@ const headers = {
     'Content-Type': 'application/json'
 };
 
-function apiMethod(apiRequest) {
+const apiMethod = (apiRequest) => {
     return fetch(`${baseUrl}/${apiRequest.url}`, {
         method: `${apiRequest.method}`,
         headers: headers,
@@ -15,12 +15,19 @@ function apiMethod(apiRequest) {
                 return res.json();
             }
             return Promise.reject(res.status);
-        })
-        .then(res => {
-                apiRequest.renderFunction(res);
-            }
-        )
-        .catch(err => console.log(`Ошибка: ${err}`));
+        });
 }
 
-export {apiMethod};
+const getInitialCards = () => apiMethod({url: 'cards', method: 'GET'});
+const getUserProfile = () => apiMethod({url: 'users/me', method: 'GET'});
+const updateProfile = (name, description) =>
+    apiMethod({url: 'users/me', method: 'PATCH', body: {name: name, about: description}});
+const updateAvatar = (avatar) =>
+    apiMethod({url: 'users/me/avatar', method: 'PATCH', body: {avatar: avatar}});
+const uploadCard = (card) =>
+    apiMethod({url: 'cards', method: 'POST', body: card});
+const deleteLike = (id) => apiMethod({url: `cards/likes/${id}`, method: 'DELETE'});
+const addLike = (id) => apiMethod({url: `cards/likes/${id}`, method: 'PUT'});
+const apiDeleteCard = (id) => apiMethod({url: `cards/${id}`, method: 'DELETE'});
+
+export {apiMethod, getInitialCards, getUserProfile, updateProfile, updateAvatar, uploadCard, deleteLike, addLike, apiDeleteCard}

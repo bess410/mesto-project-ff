@@ -29,11 +29,4 @@ function overlayClose(evt) {
     }
 }
 
-function crossButtonClose(evt) {
-    const target = evt.target;
-    if (target.classList.contains('popup__close')) {
-        closePopup(target.closest('.popup'));
-    }
-}
-
-export {closePopup, openPopup, overlayClose, crossButtonClose};
+export {closePopup, openPopup, overlayClose};
