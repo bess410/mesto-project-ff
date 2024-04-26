@@ -153,23 +153,24 @@ const button = confirmCardDeletionPopup.querySelector('.popup__button');
 let cardIdToDelete = 0;
 let cardElementToDelete;
 
+button.addEventListener('click', (event) => {
+    event.preventDefault();
+    deleteCardListener();
+});
+
+function deleteCardListener() {
+    deleteCard(cardIdToDelete)
+        .then(() => {
+            cardElementToDelete.remove();
+            closePopup(confirmCardDeletionPopup)
+        })
+        .catch(error => console.log(error));
+}
+
 const confirmDeletion = (cardElement, cardId) => {
     openPopup(confirmCardDeletionPopup);
     cardIdToDelete = cardId;
     cardElementToDelete = cardElement;
-
-    function deleteCardListener(event) {
-        event.preventDefault();
-        deleteCard(cardIdToDelete)
-            .then(() => {
-                cardElementToDelete.remove();
-                closePopup(confirmCardDeletionPopup)
-            })
-            .catch(error => console.log(error));
-        button.removeEventListener('click', deleteCardListener);
-    }
-
-    button.addEventListener('click', deleteCardListener);
 }
 
 // Загружаем данные с сервера
