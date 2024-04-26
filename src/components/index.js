@@ -2,14 +2,19 @@ import {createCard, likeCard} from "./card.js";
 import {closePopup, openPopup, overlayClose} from "./modal";
 import {clearValidation, enableValidation} from "./validation";
 import validationConfig from "./config/validationConfig";
-import {uploadCard, getInitialCards, getUserProfile, updateProfile, updateAvatar, deleteCard} from "./api";
+import {
+    uploadCard,
+    getInitialCards,
+    getUserProfile,
+    updateProfile,
+    updateAvatar,
+    deleteCard,
+    deleteLike,
+    addLike
+} from "./api";
 
 enableValidation(validationConfig);
 // Закрытие попапа
-const crossButtons = document.querySelectorAll('.popup__close');
-crossButtons.forEach(button => button.addEventListener('click',
-    (evt) => closePopup(evt.target.closest('.popup'))));
-
 const popups = document.querySelectorAll('.popup');
 popups.forEach(popup => popup.addEventListener('click',
     (evt) => overlayClose(evt)));
@@ -90,10 +95,17 @@ function renderProfile(res) {
 
 // Отображаем карточки
 const cards = document.querySelector('.places__list');
+const cardConfig = {
+    "likeCard": likeCard,
+    "popupCard": popupCard,
+    "confirmDeletion": confirmDeletion,
+    "deleteLike": deleteLike,
+    "addLike": addLike
+}
 
 function renderCards(res, ownerId) {
     res.forEach(card => {
-        cards.append(createCard(card, ownerId, likeCard, popupCard, confirmDeletion));
+        cards.append(createCard(card, ownerId, cardConfig));
     });
 }
 
@@ -121,7 +133,7 @@ function submitAddNewCard(evt) {
     }
     uploadCard(card)
         .then(data => {
-            cards.prepend(createCard(data, data.owner._id, likeCard, popupCard, confirmDeletion));
+            cards.prepend(createCard(data, data.owner._id, cardConfig));
             closePopup(popupAddNewCard);
         })
         .catch(error => console.log(error))
@@ -150,8 +162,7 @@ function fillCardImagePopup(card) {
 const confirmCardDeletionPopup = document.querySelector('.popup_type_confirm_card_deletion');
 const button = confirmCardDeletionPopup.querySelector('.popup__button');
 
-let cardIdToDelete = 0;
-let cardElementToDelete;
+let cardToDelete;
 
 button.addEventListener('click', (event) => {
     event.preventDefault();
@@ -159,18 +170,20 @@ button.addEventListener('click', (event) => {
 });
 
 function deleteCardListener() {
-    deleteCard(cardIdToDelete)
+    deleteCard(cardToDelete.cardId)
         .then(() => {
-            cardElementToDelete.remove();
+            cardToDelete.cardElement.remove();
             closePopup(confirmCardDeletionPopup)
         })
         .catch(error => console.log(error));
 }
 
-const confirmDeletion = (cardElement, cardId) => {
+function confirmDeletion(cardElement, cardId) {
     openPopup(confirmCardDeletionPopup);
-    cardIdToDelete = cardId;
-    cardElementToDelete = cardElement;
+    cardToDelete = {
+        "cardId": cardId,
+        "cardElement": cardElement
+    }
 }
 
 // Загружаем данные с сервера

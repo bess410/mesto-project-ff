@@ -24,8 +24,8 @@ function escapeListener(evt) {
 
 function overlayClose(evt) {
     const target = evt.target;
-    if (target.classList.contains('popup_is-opened')) {
-        closePopup(target);
+    if (target.classList.contains('popup_is-opened') || target.classList.contains('popup__close')) {
+        closePopup(target.closest('.popup'));
     }
 }
 
